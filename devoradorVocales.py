@@ -27,3 +27,23 @@ for letter in user_word:
         continue
     else:
         print(letter)
+#con comando elif
+
+user_word =input("ingrese una palabra: ")
+
+user_word=user_word.upper()
+
+for letter in user_word:
+    # Completa el cuerpo del bucle for.
+    if letter =="A":
+        continue
+    elif letter =="E":
+        continue
+    elif letter =="I":
+        continue
+    elif letter =="O":
+        continue
+    elif letter =="U":
+        continue
+    else:
+        print(letter)
