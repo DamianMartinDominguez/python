@@ -112,3 +112,109 @@ elif victor == 'me':
 	print("¡He ganado!")
 else:
 	print("¡Empate!")
+
+	
+	
+	
+	
+#######codigo traducido	
+	
+	
+from random import randrange
+
+
+def mostrar_tablero(tablero):
+	print("+-------" * 3,"+", sep="")
+	for fila in range(3):
+		print("|       " * 3,"|", sep="")
+		for col in range(3):
+			print("|   " + str(tablero[fila][col]) + "   ", end="")
+		print("|")
+		print("|       " * 3,"|",sep="")
+		print("+-------" * 3,"+",sep="")
+
+
+def enter_move(tablero):
+	ok = False	# suposición falsa - la necesitamos para entrar en el bucle
+	while not ok:
+		move = input("Ingresa tu movimiento: ") 
+		ok = len(move) == 1 and move >= '1' and move <= '9' # ¿es valido lo que ingreso el usuario?verificacion de condicion
+		if not ok:
+			print("Movimiento erróneo, ingrésalo nuevamente") # no, no lo es. ingrésalo nuevamente
+			continue
+		move = int(move) - 1 	# numero de la celda, del 0 al 8
+		fila = move // 3 	# fila de la celda
+		col = move % 3		# columna de la celda
+		sign = tablero[fila][col]	# marca el cuadro elegido
+		ok = sign not in ['O','X'] 
+		if not ok:	# esta ocupado, ingresa una posición nuevamente
+			print("¡Cuadro ocupado, ingresa nuevamente!")
+			continue
+	tablero[fila][col] = 'O' 	# colocar '0' al cuadro seleccionado
+
+
+def hacer_lista_espacios_libres(tablero):
+	free = []	# la lista esta vacía inicialmente
+	for fila in range(3): # itera a través de las filas
+		for col in range(3): # iitera a través de las columnas
+			if tablero[fila][col] not in ['O','X']: # ¿Está la celda libre?
+				free.append((fila,col)) # si, agrega una nueva tupla a la lista
+	return free
+
+
+def victory_for(tablero,sgn):#busca a un ganador
+	if sgn == "X":	# ¿Estamos buscando X?
+		who = 'me'	# Si, es la maquina
+	elif sgn == "O": # ... ¿o estamos buscando O?
+		who = 'you'	# Si, es el usuario
+	else:
+		who = None	# ¡No debemos de caer aquí!
+	cross1 = cross2 = True  # para las diagonales
+	for rc in range(3):
+		if tablero[rc][0] == sgn and tablero[rc][1] == sgn and tablero[rc][2] == sgn:	# check row rc chequea fila rc
+			return who
+		if tablero[0][rc] == sgn and tablero[1][rc] == sgn and tablero[2][rc] == sgn: # check column rc chequea columna rc
+			return who
+		if tablero[rc][rc] != sgn: # revisar la primer diagonal
+			cross1 = False
+		if tablero[2 - rc][2 - rc] != sgn: # revisar la segunda diagonal
+			cross2 = False
+	if cross1 or cross2:
+		return who
+	return None
+
+
+def draw_move(tablero):
+	free = hacer_lista_espacios_libres(tablero) # crea una lista de los cuadros vacios o libres
+	cnt = len(free)
+	if cnt > 0:	# si la lista no esta vacía, elegir un lugar para 'X' y colocarla
+		this = randrange(cnt)
+		fila, col = free[this]
+		tablero[fila][col] = 'X'
+
+
+tablero = [ [3 * j + i + 1 for i in range(3)] for j in range(3) ] # crear un tablero vacío
+tablero[1][1] = 'X' # colocar la primer 'X' en el centro
+free = hacer_lista_espacios_libres(tablero)
+human_turn = True # ¿De quien es turno ahora?
+while len(free):
+	mostrar_tablero(tablero)
+	if human_turn:
+		enter_move(tablero)
+		victor = victory_for(tablero,'O')
+	else:	
+		draw_move(tablero)
+		victor = victory_for(tablero,'X')
+	if victor != None:
+		break
+	human_turn = not human_turn		
+	free = hacer_lista_espacios_libres(tablero)
+
+mostrar_tablero(tablero)
+if victor == 'you':
+	print("¡Has ganado!")
+elif victor == 'me':
+	print("¡He ganado!")
+else:
+	print("¡Empate!")
+	
